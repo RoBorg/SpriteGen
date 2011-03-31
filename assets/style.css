@@ -1,0 +1,195 @@
+
+html, body
+{
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+body
+{
+	background: #82b1ec;
+	color: #ffffff;
+	font-family: arial, verdana, tahoma, sans-serif;
+	font-size: medium;
+}
+
+#header
+{
+	background: #1166d3;
+	padding: 1em;
+	margin: 0;
+}
+
+#header-inner
+{
+	max-width: 750px;
+	margin: auto;
+	overflow: hidden;
+}
+
+#header h1
+{
+	float: left;
+	background: url('css-sprites.png');
+	width: 384px;
+	height: 62px;
+	margin: 10px 20px 5px 0;
+	text-indent: -999px;
+	overflow: hidden;
+}
+
+#header p
+{
+	margin: 0;
+	color: #82b1ec;
+	font-weight: bold;
+	font-size: 16px;
+	padding-top: 15px;
+}
+
+#page
+{
+	max-width: 920px;
+	padding: 0 20px 20px 20px;
+	margin: auto;
+}
+
+label
+{
+	display: block;
+}
+
+fieldset
+{
+	border: 1px solid #ffffff;
+	margin-top: 1em;
+}
+
+#jpeg-settings
+{
+	display: none;
+}
+
+#sprite
+{
+	display: block;
+	margin: auto;
+}
+
+#demo img
+{
+	display: block;
+	margin: 1em auto;
+	box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+a,
+a:link,
+a:visited,
+a:active,
+a:hover
+{
+	color: #064390;
+	text-decoration: underline;
+}
+
+a:hover
+{
+	text-decoration: none;
+}
+
+h1 a,
+h1 a:link,
+h1 a:visited,
+h1 a:active,
+h1 a:hover
+{
+	color: #ffffff;
+	text-decoration: none;
+}
+
+h1 a:hover
+{
+	text-decoration: underline;
+}
+
+.error
+{
+	color: #cc0000;
+	font-weight: bold;
+}
+
+.note
+{
+	font-size: 75%;
+	font-style: italic;
+}
+
+#footer
+{
+	margin-top: 20px;
+	overflow: hidden;
+	background-color: #1166d3;
+	padding: 20px 0;
+}
+
+#tabs
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+#tabs li
+{
+	float: left;
+	margin-right: 1em;
+}
+
+#tabs li a,
+#tabs li a:link,
+#tabs li a:visited,
+#tabs li a:active,
+#tabs li a:hover
+{
+	display: block;
+	padding: 0.25em 1em;
+	text-decoration: none;
+	font-size: 120%;
+	background: rgba(17, 102, 211, 0.05);
+	border-radius: 0 0 10px 10px;
+	transition: 0.2s;
+}
+
+#tabs li a:hover
+{
+	color: #1166d3;
+	background: rgba(17, 102, 211, 0.1);
+}
+
+#tabs li.selected a,
+#tabs li.selected a:link,
+#tabs li.selected a:visited,
+#tabs li.selected a:active,
+#tabs li.selected a:hover
+{
+	background: #1166d3;
+	color: #82b1ec;
+}
+
+.tab
+{
+	display: none;
+}
+
+.tab.selected
+{
+	display: block;
+}
+
+p
+{
+	margin-left: 2em;
+}

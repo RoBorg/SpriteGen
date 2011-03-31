@@ -12,7 +12,7 @@ set_error_handler('errorHandler');
  */
 function println($str = '')
 {
-	echo $str, "\n";
+    echo $str, "\n";
 }
 
 /**
@@ -22,7 +22,7 @@ function println($str = '')
  */
 function html($str, $mode = ENT_COMPAT)
 {
-	return htmlspecialchars($str, $mode, mb_internal_encoding());
+    return htmlspecialchars($str, $mode, mb_internal_encoding());
 }
 
 /**
@@ -31,13 +31,13 @@ function html($str, $mode = ENT_COMPAT)
  * @param mixed  the variable to print
  * @param string a CSS class name
  */
-function printR($str, $class='')
+function printR($str, $class = '')
 {
-	print('<pre class="' . $class . '" style="text-align: left; background-color: #ffffff !important; color: #000000 !important;">');
-	ob_start();
-	print_r($str);
-	print(html(ob_get_clean()));
-	println('</pre>');
+    print('<pre class="' . $class . '" style="text-align: left; background-color: #ffffff !important; color: #000000 !important;">');
+    ob_start();
+    print_r($str);
+    print(html(ob_get_clean()));
+    println('</pre>');
 }
 
 /**
@@ -49,53 +49,40 @@ function printR($str, $class='')
  */
 function isImage($path)
 {
-	try
-	{
-		$info = getimagesize($path);
-		if (($info[2] != IMAGETYPE_GIF) && ($info[2] != IMAGETYPE_JPEG) && ($info[2] != IMAGETYPE_PNG))
-			return false;
-	}
-	catch (Exception $e)
-	{
-		return false;
-	}
-	
-	return true;
-}
+    try {
+        $info = getimagesize($path);
+        if (($info[2] != IMAGETYPE_GIF) && ($info[2] != IMAGETYPE_JPEG) && ($info[2] != IMAGETYPE_PNG)) {
+            return false;
+        }
+    } catch (Exception $e) {
+        return false;
+    }
 
-/**
- * Empty then delete a directory
- *
- * @param string the directory to delete
- */
-function deleteDir($dir)
-{
-	foreach (glob($dir . '/*') as $file)
-		unlink($file);
-	
-	rmdir($dir);
+    return true;
 }
 
 /**
  * Throw an exception instead of producing a warning
  *
- * @param integer error number
+ * @param int error number
  * @param string error string
  * @param string error file
- * @param integer error line
+ * @param int error line
  * @param array error context
  *
  * @return bool false for notices and strict
  */
-function errorHandler($number, $string, $file = 'Unknown', $line = 0, $context = array())
+function errorHandler($number, $string, $file = 'Unknown', $line = 0, $context = [])
 {
-	if (($number == E_NOTICE) || ($number == E_STRICT))
-		return false;
-		
-	if (!error_reporting())
-		return false;
-	
-	throw new Exception($string, $number);
-	
-	return true;
+    if (($number == E_NOTICE) || ($number == E_STRICT)) {
+        return false;
+    }
+
+    if (!error_reporting()) {
+        return false;
+    }
+
+    throw new Exception($string, $number);
+
+    return true;
 }

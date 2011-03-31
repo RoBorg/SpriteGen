@@ -1,0 +1,6 @@
+
+SyntaxHighlighter.all();
+
+(function($)
+{
+})(jQuery);
