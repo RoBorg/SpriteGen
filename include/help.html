@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"> 
+<html> 
+	<head> 
+		<title>CSS Sprites Generator API Help</title> 
+	</head> 
+	<body> 
+		<h1>CSS Sprites Generator API Help</h1>
+		<p><a href="http://todo/">http://todo</a></p>
+		
+		<p>
+			The CSS Sprites Generator uses a very simple HTTP API.
+			Simply send GET or POST requests (file uploads have to be POST of course) to this URL.
+		</p>
+		
+		<p>
+			All requests except <a href="#getToken">getToken</a> require a token to be present - this is what identifies you to the system - like a session ID.
+		</p>
+		
+		<p>
+			All responses are sent as UTF-8 JSON.
+			They contain at least "message" property and an "error" property.
+			Different requests may add other properties.
+			If "error" is true then "message" will be the error message.
+		</p>
+		
+		<p>
+			All requests may be made as many times as you like (but be reasonable!).
+		</p>
+		
+		<div class="exchange" id="getToken">
+			<h2>Step 1: Get your token</h2>
+			<h3>Request</h3>
+			<p>api.php?getToken</p>
+			
+			<h3>Response</h3>
+			<dl>
+				<dt>message</dt>
+				<dt>error</dt>
+				<dt>token</dt>
+				<dd>Your token for this session</dd>
+			</dl>
+		</div>
+		
+		<div class="exchange" id="upload">
+			<h2>Step 2a: Upload your files directly</h2>
+			<p>You can upload files using a normal HTTP POST or simply <a href="#uploadUrl">send a URL</a> for the server to download.</p>
+			<p>The file data should be encoded the same as if it were sent from an <code>&lt;input type="file" name="img"&gt;</code>.</p>
+			<p>Files accepted are .png, .jpg, .jpeg, .gif and .zip (containing the aforementioned file types).</p>
+			
+			<h3>Request</h3>
+			<p>api.php?upload&amp;token=...</p>
+			
+			<h3>Response</h3>
+			<dl>
+				<dt>message</dt>
+				<dt>error</dt>
+			</dl>
+		</div>
+		
+		<div class="exchange" id="uploadUrl">
+			<h2>Step 2b: Upload your files from a URL</h2>
+			<p>Files accepted are .png, .jpg, .jpeg, .gif and .zip (containing the aforementioned file types).</p>
+			<p><b>NOT IMPLEMENTED</b></p>
+			
+			<h3>Request</h3>
+			<p>api.php?uploadUrl&amp;token=...&amp;url=...</p>
+			
+			<h3>Response</h3>
+			<dl>
+				<dt>message</dt>
+				<dt>error</dt>
+			</dl>
+		</div>
+		
+		<div class="exchange" id="create">
+			<h2>Step 3: Create your Sprite</h2>
+			<p>This may take a while - be patient!</p>
+			
+			<h3>Request</h3>
+			<p>api.php?create&amp;token=...</p>
+			<p>There are also several optional arguments you can pass in - more options may be coming soon:</p>
+			<dl>
+				<dt>padding (default = "3")</dt>
+				<dd>Padding to apply between images (pixels)</dd>
+				<dt>output_type (default = "png")</dt>
+				<dd>The output type you want (png, jpeg or gif)</dd>
+				<dt>jpeg_reduce_artefacts (default "0")</dt>
+				<dd>Pass in 1 to reduce jpeg artefacts (only used when output_type is jpeg)</dd>
+				<dt>jpeg_quality (default = "75")</dt>
+				<dd>The JPEG quality, from 0 to 100 (higher is better quality, bigger file) (only used when output_type is jpeg)</dd>
+			</dl>
+			
+			<h3>Response</h3>
+			<dl>
+				<dt>message</dt>
+				<dt>error</dt>
+				<dt>url</dt>
+				<dd>The URL you can download your sprite from</dd>
+				<dt>css</dt>
+				<dd>The CSS you need to display your sprite correctly</dd>
+				<dt>info</dt>
+				<dd>A list containing information about each file in the sprite (see below)</dd>
+				<dt>oldSize</dt>
+				<dd>The sum of the filesizes of the uploaded files (bytes)</dd>
+				<dt>newSize</dt>
+				<dd>The filesize of the new file (bytes)</dd>
+				<dt>width</dt>
+				<dd>The width of the sprite (pixels)</dd>
+				<dt>height</dt>
+				<dd>The height of the sprite (pixels)</dd>
+			</dl>
+		</div>
+	</body>
+</html>
