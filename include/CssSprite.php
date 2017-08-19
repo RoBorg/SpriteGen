@@ -58,7 +58,7 @@ class CssSprite
      *
      * @var string
      */
-    protected $cssPrefix;
+    protected $cssPrefix = '';
 
     /**
      * The output file type: png, jpeg or gif
@@ -77,7 +77,7 @@ class CssSprite
     /**
      * Create a sprite
      *
-     * @param array the images
+     * @param array the images - each entry should be in the form ['name' => 'foo.png', 'file' => '/path/to/tmp_foo.png']
      * @param array options
      */
     public function run($images, $options = [])
@@ -107,7 +107,7 @@ class CssSprite
         }
 
         foreach ($images as $image) {
-            $this->addImage($image);
+            $this->addImage($image['name'], $image['file']);
         }
 
         // Sort the images by width and name
@@ -148,12 +148,11 @@ class CssSprite
     /**
      * Add a file to the sprite
      *
-     * @param string the filesystem path of the image
+     * @param string $name the display filename path of the image
+     * @param string $path the filesystem path of the image (including real filename)
      */
-    public function addImage($image)
+    public function addImage($name, $file)
     {
-        $file = $image['tmp_name'];
-
         $info = getimagesize($file);
         $pathInfo = pathinfo($file);
         $types = [
@@ -163,11 +162,11 @@ class CssSprite
         ];
 
         if (empty($types[$info[2]])) {
-            throw new Exception('Invalid image file - ' . $image['name']);
+            throw new Exception('Invalid image file - ' . $name);
         }
 
         $this->inputFiles[] = [
-            'name' => $image['name'],
+            'name' => $name,
             'path' => $file,
             'pathInfo' => $pathInfo,
             'width' => $info[0],
@@ -456,6 +455,16 @@ class CssSprite
     }
 
     /**
+     * Get the HTML to display the sprites
+     *
+     * @return string
+     */
+    public function getInfo()
+    {
+        return $this->inputFiles;
+    }
+
+    /**
      * Convert a filename to a CSS-friendly selector fragment
      *
      * @param string the filename
@@ -484,5 +493,10 @@ class CssSprite
     public function getDataUri()
     {
         return 'data:image/' . $this->outputType . ';base64,' . base64_encode($this->getImage());
+    }
+
+    public function getOutputType()
+    {
+        return $this->outputType;
     }
 }

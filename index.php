@@ -23,8 +23,7 @@ if (!empty($_POST['save'])) {
                 case UPLOAD_ERR_OK:
                     $images[] = [
                         'name' => $_FILES['images']['name'][$i],
-                        'type' => $_FILES['images']['type'][$i],
-                        'tmp_name' => $_FILES['images']['tmp_name'][$i],
+                        'file' => $_FILES['images']['tmp_name'][$i],
                     ];
                     break;
 
@@ -321,6 +320,11 @@ if ($done) {
             </div>
             <div class="tab" id="news">
                 <h2>Latest News</h2>
+
+                <h3>Aug 2017</h3>
+                <ul>
+                    <li>Improved API</li>
+                </ul>
 
                 <h3>May 2014</h3>
                 <ul>

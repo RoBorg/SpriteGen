@@ -1,6 +1,7 @@
 <?php
 
 ini_set('html_errors', false);
+ini_set('memory_limit', '512M');
 
 $response = new StdClass();
 $response->message = '';
@@ -47,36 +48,50 @@ try {
             throw new Exception('Images not found - Either you didn\'t upload any or your session expired');
         }
 
-        $padding = isset($_REQUEST['padding']) ? (int)$_REQUEST['padding'] : 3;
-        $padding = min(max(0, $padding), 25);
+        $options = [];
 
-        $type = 'png';
-        if (!empty($_REQUEST['output_type']) && in_array($_REQUEST['output_type'], ['jpeg', 'gif'])) {
-            $type = $_REQUEST['output_type'];
+        if (!empty($_REQUEST['output_type']) && in_array($_REQUEST['output_type'], ['jpeg', 'gif', 'png'])) {
+            $options['type'] = $_REQUEST['output_type'];
         }
-        $reduceArtefacts = !empty($_REQUEST['jpeg_reduce_artefacts']) && ($type == 'jpeg');
-        $prefix = '.';
+
+        if (isset($_REQUEST['jpeg_quality'])) {
+            $options['jpeg_quality'] = min(100, max(0, (int)$_REQUEST['jpeg_quality']));
+        }
+
         if (!empty($_REQUEST['css_prefix'])) {
-            $prefix .= preg_replace('/[^a-z0-9_-]/ui', '', $_REQUEST['css_prefix']);
+            $options['css_prefix'] = preg_replace('/[^a-z0-9_-]/ui', '', $_REQUEST['css_prefix']);
         }
+
+        if (isset($_REQUEST['padding'])) {
+            $options['padding'] = min(max(0, (int)$_REQUEST['padding']), 25);
+        }
+
+        if (!empty($_REQUEST['jpeg_reduce_artefacts']) && ($s->getOutputType() == 'jpeg')) {
+            $options['jpeg_reduce_artefacts'] = true;
+        }
+
+        $images = [];
+
+        foreach (new DirectoryIterator($dir) as $file)
+		{
+			if (preg_match('/\.(png|jpe?g|gif)$/ui', $file->getFilename())) {
+				$images[] = [
+                    'name' => $file->getFilename(),
+                    'file' => $file->getPathname(),
+                ];
+            }
+		}
 
         $s = new CssSprite($padding, $reduceArtefacts, $prefix);
-        $s->addDirectory($dir);
-        $s->pack();
+        $s->run($images);
 
-        $options = [];
-        if (($type == 'jpeg') && isset($_REQUEST['jpeg_quality'])) {
-            $options = [min(100, max(0, (int)$_REQUEST['jpeg_quality']))];
-        } elseif ($type == 'png') {
-            $options = [9, PNG_ALL_FILTERS];
-        }
-
-        $filepath = 'uploads/' . $token . '.' . $type;
-        file_put_contents($filepath, $s->getImage($type, $options));
+        $filepath = 'uploads/' . $token . '.' . $s->getOutputType();
+        file_put_contents($filepath, $s->getImage($s->getOutputType(), $options));
 
         $server = $_SERVER['HTTP_HOST'] == 'localhost:96' ? 'dev.justsayplease.co.uk:96' : $_SERVER['HTTP_HOST'];
-        $response->url = 'http://' . $server . dirname($_SERVER['PHP_SELF']) . '/uploads/' . $token . '.' . $type;
+        $response->url = 'http://' . $server . dirname($_SERVER['PHP_SELF']) . '/uploads/' . $token . '.' . $s->getOutputType();
         $response->css = $s->getCss();
+        $response->html = $s->getHtml();
 
         //$s->smush($filepath, $response->url);
 
@@ -141,7 +156,7 @@ try {
 }
 
 header('Content-type: application/json');
-print(json_encode($response));
+print(json_encode($response, JSON_PRETTY_PRINT));
 
 /**
  * Receive an image or zip of images in $_FILES['img'] and save the image(s) to the specified directory
